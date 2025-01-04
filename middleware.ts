@@ -5,6 +5,10 @@ export function middleware(request: NextRequest) {
 
   const isAuthenticated = request.cookies.has('access')
 
+  if (request.nextUrl.pathname === '/password-reset') {
+    return NextResponse.next();
+  }
+
   if (request.nextUrl.pathname === '/') {
     return NextResponse.next()
   }

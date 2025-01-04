@@ -55,7 +55,11 @@ export function useAuth() {
   const resetPasswordMutation = useMutation({
     mutationFn: async (data: resetInputEmail) => {
       await api.post('/users/reset_password/', data)
-    }
+    },
+    onSuccess: () => {
+      toast.success('Enviamos um email para você redefinir sua nova senha')
+    },
+    onError: handleApiError
   })
 
   const resetPasswordConfirmMutation = useMutation({
@@ -87,8 +91,8 @@ export function useAuth() {
     isAuthenticated: useAuthStore((state) => state.isAuthenticated),
     login: loginMutation.mutate,
     newRegister: registerMutation.mutate,
-    useResetPassword: resetPasswordMutation.mutate,
-    useResetPasswordConfirm: resetPasswordConfirmMutation.mutate,
+    resetPassword: resetPasswordMutation.mutate,
+    resetPasswordConfirm: resetPasswordConfirmMutation.mutate,
     logout: logoutMutation.mutate
   }
 }
