@@ -14,3 +14,14 @@ export interface RegisterInputs extends LoginInputs {
   last_name: string;
   re_password: string;
 }
+
+export interface resetInputEmail {
+  email: string;
+}
+
+export interface resetInputsPassword {
+  uid: string;
+  token: string;
+  new_password: string;
+  re_new_password: string;
+}

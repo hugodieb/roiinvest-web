@@ -6,7 +6,7 @@ import { useAuthStore } from '@/app/store/auth'
 import { handleApiError } from '@/app/lib/errors'
 
 import toast from 'react-hot-toast'
-import { LoginInputs, RegisterInputs } from '../types/auth'
+import { LoginInputs, RegisterInputs, resetInputEmail, resetInputsPassword } from '../types/auth'
 
 export function useAuth() {
   const { setAuth, logout } = useAuthStore()
@@ -52,6 +52,18 @@ export function useAuth() {
     onError: handleApiError
   })
 
+  const resetPasswordMutation = useMutation({
+    mutationFn: async (data: resetInputEmail) => {
+      await api.post('/users/reset_password/', data)
+    }
+  })
+
+  const resetPasswordConfirmMutation = useMutation({
+    mutationFn: async (data: resetInputsPassword) => {
+      await api.post('/users/reset_password_confirm/', data)
+    }
+  })
+
   const checkAuth = async () => {
     try {
       const response = await api.get('/users/me/')
@@ -75,6 +87,8 @@ export function useAuth() {
     isAuthenticated: useAuthStore((state) => state.isAuthenticated),
     login: loginMutation.mutate,
     newRegister: registerMutation.mutate,
+    useResetPassword: resetPasswordMutation.mutate,
+    useResetPasswordConfirm: resetPasswordConfirmMutation.mutate,
     logout: logoutMutation.mutate
   }
 }
