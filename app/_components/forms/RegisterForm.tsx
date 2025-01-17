@@ -21,7 +21,6 @@ const RegisterForm = () => {
 
   const { newRegister, isLoading } = useAuth();
 
-
   return (
     <div className="p-4">
       <Form<FieldFormValid>

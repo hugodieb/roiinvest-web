@@ -4,9 +4,11 @@ import { useAuth } from '@/app/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Gem } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import LinkButton from './LinkButton'
+import { Gem } from 'lucide-react'
+import { useAuthStore } from '@/app/store/auth'
 
 
 const navigation = [
@@ -22,14 +24,12 @@ function classNames(...classes: string[]) {
 
 export default function Navbar() {
   const { logout, isAuthenticated } = useAuth();
+  const { user } = useAuthStore()
   const router = useRouter()
+  console.log(user?.first_name)
 
   const handleLogout = () => {
     logout()
-  }
-
-  const handleHome = () => {
-    router.push('/')
   }
 
   return (
@@ -71,19 +71,27 @@ export default function Navbar() {
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
-              className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
-            </button>
 
             {/* Profile dropdown */}
             {!isAuthenticated
-              ? ''
-              : <Menu as="div" className="relative ml-3">
+              ? <div className='flex flex-row'>
+                <LinkButton
+                  href='/auth/login'
+                  icon='CircleUserRound'
+                  className='w-15 h-15 bg-gray-800 text-zinc-200 flex items-center justify-center rounded-full'
+                  classNameIcon='w-11 h-11'
+                  strokeWidth={1.5}
+                />
+              </div>
+              : <Menu as="div" className="flex flex-row relative space-x-4 ml-3">
+                <button
+                  type="button"
+                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white"
+                >
+                  <span className="absolute -inset-1.5" />
+                  <span className="sr-only">View notifications</span>
+                  <BellIcon className="size-6" />
+                </button>
                 <div>
                   <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="absolute -inset-1.5" />
@@ -91,18 +99,26 @@ export default function Navbar() {
                     <img
                       alt=""
                       src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      className="size-8 rounded-full"
+                      className="size-10 rounded-full"
                     />
                   </MenuButton>
                 </div>
                 <MenuItems
                   transition
-                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right
+                  className="absolute right-10 z-10 mt-2 w-48 origin-top-right
                  rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5
                   transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform
                    data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75
                     data-[enter]:ease-out data-[leave]:ease-in"
                 >
+                  <span className="block px-4 py-2 text-sm text-gray-700
+                     data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                  > Olá <span className='font-bold'>
+                      {user?.first_name}
+                    </span>
+                    <p className='text-gray-700'>{user?.email}</p>
+                  </span>
+                  <hr className="flex-grow border-t-2 border-gray-400" />
                   <MenuItem>
                     <a
                       href="#"
@@ -123,9 +139,9 @@ export default function Navbar() {
                   </MenuItem>
                   <MenuItem>
                     <Button
-                      variant="link"
+                      variant="ghost"
                       onClick={handleLogout}
-                      className="block px-4 py-2 text-sm text-gray-700 "
+                      className="w-full justify-start text-left"
                     >
                       Sign out
                     </Button>

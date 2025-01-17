@@ -1,4 +1,3 @@
-import { Gem } from 'lucide-react';
 import type { Metadata } from 'next';
 import PasswordResetForm from '../_components/forms/PasswordResetForm';
 

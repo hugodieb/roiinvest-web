@@ -1,7 +1,8 @@
 export interface User {
   id: number;
   email: string;
-  username: string;
+  first_name: string;
+  last_name: string;
 }
 
 export interface LoginInputs {
@@ -24,4 +25,9 @@ export interface resetInputsPassword {
   token: string;
   new_password: string;
   re_new_password: string;
+}
+
+export interface activation {
+  uid: string;
+  token: string;
 }

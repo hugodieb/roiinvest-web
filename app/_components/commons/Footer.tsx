@@ -1,13 +1,9 @@
 export default function Footer() {
   return (
-    <footer className='bg-gray-100 h-16'>
-      <div className='h-full px-2'>
-        <div className='flex items-center justify-center h-full'>
-          <p className='text-gray-600 text-xs'>
-            &copy; 2024 Roiinvest, Inc. All rights reserved.
-          </p>
-        </div>
-      </div>
+    <footer className="bg-gray-800 text-white py-6 text-center">
+      <p className="text-sm">
+        © {new Date().getFullYear()} Roiinvest. Todos os direitos reservados.
+      </p>
     </footer>
   )
 }

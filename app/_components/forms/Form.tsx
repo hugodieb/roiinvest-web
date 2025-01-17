@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { PasswordInput } from '../commons/Password-input';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { LinkButton } from '../commons';
 
 
 interface Props<T extends FieldValues> {
@@ -43,12 +44,24 @@ const Form = <T extends FieldValues>({ schema, onSubmit, fields, isLoading, titl
           >
             {fields.map((field) => (
               <div key={field.name as string}>
-                <label className="block text-sm/6
-               font-bold
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm/6 
+                  font-bold
                 text-gray-600"
-                >
-                  {field.label}
-                </label>
+                  >
+                    {field.label}
+                  </label>
+                  {field.type === 'password' && isLoginPage ?
+                    <div className="text-sm">
+                      <LinkButton href="/password-reset"
+                        title='Esqueceu a senha?'
+                        className="font-semibold text-indigo-600 hover:text-indigo-500" />
+                    </div>
+                    :
+                    ''
+                  }
+
+                </div>
                 {field.type === 'password' ?
                   <PasswordInput id={field.type}
                     register={register(field.name as string)}
