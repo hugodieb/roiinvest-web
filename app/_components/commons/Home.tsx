@@ -20,7 +20,7 @@ export default function Home() {
           </p>
           <LinkButton href={"/auth/register"}
             title="Abra sua conta Grátis"
-            className="flex justify-center mt-6 rounded-md
+            classNameLink="flex justify-center mt-6 rounded-md
            bg-gray-800 px-3 py-2.5 text-sm/6 font-semibold
             text-white shadow-sm hover:bg-gray-600
              focus-visible:outline focus-visible:outline-2

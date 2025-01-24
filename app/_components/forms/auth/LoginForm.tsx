@@ -19,7 +19,7 @@ const LoginForm = () => {
   const { login, isLoading } = useAuth();
 
   return (
-    <div className="p-4">
+    <div>
       <Form<FieldFormValid>
         schema={loginSchema}
         onSubmit={handleFormSubmit}

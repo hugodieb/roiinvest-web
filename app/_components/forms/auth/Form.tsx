@@ -7,10 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@headlessui/react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from "lucide-react";
-import { PasswordInput } from '../commons/Password-input';
+import { PasswordInput } from '@/app/_components/commons/Password-input';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LinkButton } from '../commons';
+import LinkButton from '@/app/_components/commons/LinkButton';
 
 
 interface Props<T extends FieldValues> {

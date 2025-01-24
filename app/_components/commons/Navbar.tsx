@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+
 import LinkButton from './LinkButton'
-import { Gem } from 'lucide-react'
+import { Gem, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/app/store/auth'
 
 
@@ -18,6 +18,12 @@ const navigation = [
   { name: 'Calendar', href: '#', current: false },
 ]
 
+const menuItensNavigation = [
+  { name: 'Configurações', href: '/profile', icon: 'Settings' },
+  { name: 'Minha Carteira', href: '/carteira', icon: 'Wallet' },
+  { name: 'Suporte', href: '/suporte', icon: 'Headset' }
+]
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
@@ -25,8 +31,6 @@ function classNames(...classes: string[]) {
 export default function Navbar() {
   const { logout, isAuthenticated } = useAuth();
   const { user } = useAuthStore()
-  const router = useRouter()
-  console.log(user?.first_name)
 
   const handleLogout = () => {
     logout()
@@ -38,7 +42,9 @@ export default function Navbar() {
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             {/* Mobile menu button*/}
-            <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+            <DisclosureButton className="group relative inline-flex items-center justify-center
+             rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none
+              focus:ring-2 focus:ring-inset focus:ring-white">
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open main menu</span>
               <Bars3Icon aria-hidden="true" className="block size-6 group-data-[open]:hidden" />
@@ -78,7 +84,7 @@ export default function Navbar() {
                 <LinkButton
                   href='/auth/login'
                   icon='CircleUserRound'
-                  className='w-15 h-15 bg-gray-800 text-zinc-200 flex items-center justify-center rounded-full'
+                  classNameLink='w-15 h-15 bg-gray-800 text-zinc-200 flex items-center justify-center rounded-full'
                   classNameIcon='w-11 h-11'
                   strokeWidth={1.5}
                 />
@@ -93,7 +99,9 @@ export default function Navbar() {
                   <BellIcon className="size-6" />
                 </button>
                 <div>
-                  <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                  <MenuButton className="relative flex rounded-full bg-gray-800 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-white
+                    focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Open user menu</span>
                     <img
@@ -118,32 +126,38 @@ export default function Navbar() {
                     </span>
                     <p className='text-gray-700'>{user?.email}</p>
                   </span>
-                  <hr className="flex-grow border-t-2 border-gray-400" />
-                  <MenuItem>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700
-                     data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                    >
-                      Your Profile
-                    </a>
-                  </MenuItem>
-                  <MenuItem>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700
-                     data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                    >
-                      Settings
-                    </a>
-                  </MenuItem>
+                  <hr className="flex-grow border-t-2 border-gray-400 mb-2" />
+
+                  {
+                    menuItensNavigation.map((item) => (
+                      <MenuItem key={item.name}>
+                        <LinkButton href={item.href}
+                          title={item.name}
+                          classNameLink=''
+                          classNameTitle='flex flex-row justify-between text-xs
+                       items-center w-full font-semibold text-zinc-800 h-7 px-4'
+                          size='16'
+                          icon={item.icon}
+                        />
+                      </MenuItem>
+                    ))
+                  }
+
+                  <hr className="flex-grow border-t-2 border-gray-400 mt-2" />
+
                   <MenuItem>
                     <Button
                       variant="ghost"
                       onClick={handleLogout}
                       className="w-full justify-start text-left"
                     >
-                      Sign out
+                      <div className='flex flex-row justify-between text-xs
+                       items-center w-full font-semibold text-zinc-800'
+                      >
+                        <span>Sair</span>
+                        <LogOut />
+                      </div>
+
                     </Button>
                   </MenuItem>
                 </MenuItems>

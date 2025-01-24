@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import PasswordResetForm from '../_components/forms/PasswordResetForm';
+import PasswordResetForm from '../_components/forms/auth/PasswordResetForm';
 
 export const metadata: Metadata = {
   title: 'Roiinvest | Reset de senha',
