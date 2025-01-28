@@ -1,6 +1,13 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserProfileData, UserProfileSchema } from "@/app/validators/profile";
+"use client"
+
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { UserProfileSchema, UserProfileData } from "@/app/validators/profile"
+import { AvatarUpload } from "./Avatar-upload"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function ProfileForm() {
   const {
@@ -10,98 +17,72 @@ export default function ProfileForm() {
     formState: { errors },
   } = useForm<UserProfileData>({
     resolver: zodResolver(UserProfileSchema),
-  });
+  })
+
+  const genderMap = {
+    male: 'M',
+    female: 'F',
+    other: 'O'
+  }
 
   const onSubmit = (data: UserProfileData) => {
-    const formData = new FormData();
-    formData.append("avatar", data.avatar as File); // Append do arquivo
-    console.log("Dados do Perfil:", data);
-
-    console.log("Profile Data:", data);
-    // TODO: Implementar submissão para a API
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setValue("avatar", file); // Atualiza o campo no form
-  };
+    console.log(data)
+    // Here you would typically send the data to your backend
+  }
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="w-full max-w-2xl p-8">
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <h2 className="text-2xl font-bold mb-6">Formulário de Perfil</h2>
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle>Perfil do Usuário</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <AvatarUpload onChange={(file) => setValue("avatar", file)} error={errors.avatar?.message as string} />
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="birth_date" className="block mb-2">
-                Data de Nascimento
-              </label>
-              <input
-                type="date"
-                {...register("birth_date")}
-                className="w-full p-2 border rounded"
-              />
-              {errors.birth_date && (
-                <p className="text-red-500">{errors.birth_date.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="gender" className="block mb-2">
-                Gênero
-              </label>
-              <select
-                {...register("gender")}
-                className="w-full p-2 border rounded"
-              >
-                <option value="">Selecione</option>
-                <option value="M">Masculino</option>
-                <option value="F">Feminino</option>
-                <option value="O">Outro</option>
-                <option value="N">Prefiro não informar</option>
-              </select>
-              {errors.gender && (
-                <p className="text-red-500">{errors.gender.message}</p>
-              )}
-            </div>
+          <div className="mt-20">
+            <Input {...register("first_name")} placeholder="Nome" />
+            {errors.first_name && <p className="text-red-500 text-sm mt-1">{errors.first_name.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="avatar" className="block mb-2">Avatar</label>
-            <input
-              type="file"
-              {...register('avatar')}
-              accept="image/*"
-              className="w-full p-2 border rounded"
-              onChange={handleFileChange}
-            />
-            {errors.avatar && <p className="text-red-500">{errors.avatar.message}</p>}
+            <Input {...register("last_name")} placeholder="Sobrenome" />
+            {errors.last_name && <p className="text-red-500 text-sm mt-1">{errors.last_name.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="avatar" className="block mb-2">Avatar</label>
-            <input
-              type="file"
-              {...register("avatar")}
-              accept="image/*"
-              className="w-full p-2 border rounded"
-            />
-            {errors.avatar && (
-              <p className="text-red-500">{errors.avatar.message}</p>
-            )}
+            <Input {...register("birth_date")} type="date" placeholder="Data de Nascimento" />
+            {errors.birth_date && <p className="text-red-500 text-sm mt-1">{errors.birth_date.message}</p>}
           </div>
 
-          <div className="mt-6">
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition"
-            >
-              Atualizar Perfil
-            </button>
+          <div>
+            <Input {...register("age", { valueAsNumber: true })} type="number" placeholder="Idade" />
+            {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>}
           </div>
+
+          <div>
+            <Select onValueChange={(value) => setValue("gender", genderMap[value])}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o gênero" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male" >Masculino</SelectItem>
+                <SelectItem value="female">Feminino</SelectItem>
+                <SelectItem value="other">Outro</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>}
+          </div>
+
+          <Button type="submit" className="flex w-full justify-center
+           rounded-md bg-slate-900 px-3 py-2.5 text-sm/6 font-semibold
+            text-white shadow-sm hover:bg-slate-950 focus-visible:outline
+             focus-visible:outline-2 focus-visible:outline-offset-2
+              focus-visible:outline-indigo-600">
+            Salvar
+          </Button>
         </form>
-      </div>
-    </div>
-  );
+      </CardContent>
+    </Card>
+  )
 }
+
