@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/app/store/auth'
 
 const api = axios.create({
@@ -9,6 +10,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const router = useRouter()
     const originalRequest = error.config
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -19,6 +21,7 @@ api.interceptors.response.use(
         return api(originalRequest)
       } catch (err) {
         useAuthStore.getState().logout()
+        router.push('/auth/login')
         return Promise.reject(error)
       }
     }

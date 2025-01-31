@@ -92,6 +92,7 @@ export function useAuth() {
       return response.data
     } catch (error) {
       logout()
+      router.push('/auth/login')
       throw error
     }
   }
