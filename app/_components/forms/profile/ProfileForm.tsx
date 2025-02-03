@@ -14,7 +14,7 @@ import { useEffect } from "react"
 export default function ProfileForm() {
 
   const { profile, isLoading } = useProfile()
-  const { updateProfile } = useProfile()
+  const { updateAvatar, updateProfile } = useProfile()
 
   const {
     register,
@@ -51,11 +51,18 @@ export default function ProfileForm() {
   ] as const;
 
   const onSubmit = (data: UserProfileData) => {
-    updateProfile(data)
+    const formData = new FormData();
+    formData.append("id", profile.id)
+    formData.append("first_name", data.first_name);
+    formData.append("last_name", data.last_name);
+    if (data.birth_date) formData.append("birth_date", data.birth_date);
+    if (data.age) formData.append("age", data.age.toString());
+    if (data.gender) formData.append("gender", data.gender);
+    if (data.avatar instanceof File) updateAvatar(data.avatar);
 
-    //console.log(data)
-    // Here you would typically send the data to your backend
-  }
+    updateProfile(formData);
+  };
+
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -64,26 +71,34 @@ export default function ProfileForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <AvatarUpload onChange={(file) => setValue("avatar", file)} error={errors.avatar?.message as string} />
-
+          <AvatarUpload
+            onChange={(file) => {
+              if (file instanceof File) {
+                setValue("avatar", file);
+              } else {
+                setValue("avatar", undefined);
+              }
+            }}
+            error={errors.avatar?.message as string}
+          />
           <div className="mt-20">
 
-            <Input {...register("first_name")} placeholder="Nome" value={profile?.first_name} />
+            <Input {...register("first_name")} placeholder="Nome" />
             {errors.first_name && <p className="text-red-500 text-sm mt-1">{errors.first_name.message}</p>}
           </div>
 
           <div>
-            <Input {...register("last_name")} placeholder="Sobrenome" value={profile?.last_name} />
+            <Input {...register("last_name")} placeholder="Sobrenome" />
             {errors.last_name && <p className="text-red-500 text-sm mt-1">{errors.last_name.message}</p>}
           </div>
 
           <div>
-            <Input {...register("birth_date")} type="date" placeholder="Data de Nascimento" value={profile?.birth_date} />
+            <Input {...register("birth_date")} type="date" placeholder="Data de Nascimento" />
             {errors.birth_date && <p className="text-red-500 text-sm mt-1">{errors.birth_date.message}</p>}
           </div>
 
           <div>
-            <Input {...register("age", { valueAsNumber: true })} type="number" placeholder="Idade" value={profile?.age} />
+            <Input {...register("age", { valueAsNumber: true })} type="number" placeholder="Idade" />
             {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>}
           </div>
 

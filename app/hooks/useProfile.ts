@@ -3,20 +3,28 @@ import { api } from '@/app/lib/api'
 import { useProfileStore } from '@/app/store/profileStore'
 import { handleApiError } from '@/app/lib/errors'
 import { UserProfile } from '../types/profileTypes'
+import { useAuth } from './useAuth'
+import { useAuthStore } from '../store/auth'
 
 export function useProfile() {
+  const { user } = useAuthStore()
   const { setProfile, updateProfile } = useProfileStore()
 
   const fetchProfile = async () => {
     const response = await api.get('/profile')
+    console.log("response", response.data)
     setProfile(response.data)
     return response.data
   }
 
   const updateProfileMutation = useMutation({
-    mutationFn: async (data: Partial<UserProfile>) => {
-      const response = await api.patch('/profile', data)
-      return response.data
+    mutationFn: async (data: FormData) => {
+      const response = await api.patch(`/profile/${data.get("id")}/`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
     },
     onSuccess: (updatedData) => {
       updateProfile(updatedData)
@@ -24,15 +32,28 @@ export function useProfile() {
     onError: handleApiError
   })
 
+  const updateAvatarMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData()
+      formData.append('avatar', file)
+      await api.post('/profile/update_avatar/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+    },
+    onError: handleApiError
+  })
+
   const { data: profile, isLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: fetchProfile,
-    retry: false
+    retry: false,
+    enabled: !!user,
   })
 
   return {
     profile,
     isLoading,
+    updateAvatar: updateAvatarMutation.mutate,
     updateProfile: updateProfileMutation.mutate
   }
 }
