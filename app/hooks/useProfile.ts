@@ -5,6 +5,7 @@ import { handleApiError } from '@/app/lib/errors'
 import { UserProfile } from '../types/profileTypes'
 import { useAuth } from './useAuth'
 import { useAuthStore } from '../store/auth'
+import toast from 'react-hot-toast'
 
 export function useProfile() {
   const { user } = useAuthStore()
@@ -12,7 +13,6 @@ export function useProfile() {
 
   const fetchProfile = async () => {
     const response = await api.get('/profile')
-    console.log("response", response.data)
     setProfile(response.data)
     return response.data
   }
@@ -28,6 +28,9 @@ export function useProfile() {
     },
     onSuccess: (updatedData) => {
       updateProfile(updatedData)
+      toast.success(
+        'Perfil atualizado com sucesso!'
+      );
     },
     onError: handleApiError
   })

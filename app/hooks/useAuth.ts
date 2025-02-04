@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { api } from '@/app/lib/api'
-import { useRouter } from 'next/navigation'
-
+import { useRouter, redirect, usePathname } from 'next/navigation'
 import { useAuthStore } from '@/app/store/auth'
 import { handleApiError } from '@/app/lib/errors'
 
@@ -10,7 +9,8 @@ import { activation, LoginInputs, RegisterInputs, resetInputEmail, resetInputsPa
 
 export function useAuth() {
   const { setAuth, logout } = useAuthStore()
-  const router = useRouter();
+  const router = useRouter()
+  const pathname = usePathname()
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginInputs) => {
@@ -92,7 +92,9 @@ export function useAuth() {
       return response.data
     } catch (error) {
       logout()
-      router.push('/auth/login')
+      if (pathname !== '/auth/register') {
+        redirect('/auth/login');
+      }
       throw error
     }
   }

@@ -19,6 +19,7 @@ export default function ProfileForm() {
   const {
     register,
     handleSubmit,
+    watch,
     setValue,
     formState: { errors },
   } = useForm<UserProfileData>({
@@ -72,6 +73,13 @@ export default function ProfileForm() {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <AvatarUpload
+            avatarUrl={
+              profile?.avatar
+                ? profile.avatar.startsWith("http")
+                  ? profile.avatar
+                  : `http://localhost:8000${profile.avatar}`
+                : undefined
+            }
             onChange={(file) => {
               if (file instanceof File) {
                 setValue("avatar", file);
@@ -81,6 +89,7 @@ export default function ProfileForm() {
             }}
             error={errors.avatar?.message as string}
           />
+
           <div className="mt-20">
 
             <Input {...register("first_name")} placeholder="Nome" />
@@ -103,7 +112,9 @@ export default function ProfileForm() {
           </div>
 
           <div>
-            <Select onValueChange={(value) => setValue("gender", value)}>
+            <Select onValueChange={(value) => setValue("gender", value)}
+              value={watch("gender") || profile?.gender || ""}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o gênero" />
               </SelectTrigger>

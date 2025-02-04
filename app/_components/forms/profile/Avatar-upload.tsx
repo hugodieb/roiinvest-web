@@ -1,16 +1,21 @@
 import type React from "react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FileUser, Pencil } from "lucide-react"
 import Image from "next/image"
 
 interface AvatarUploadProps {
   onChange: (file: File) => void
+  avatarUrl?: string
   error?: string
 }
 
-export function AvatarUpload({ onChange, error }: AvatarUploadProps) {
-  const [preview, setPreview] = useState<string | null>(null)
+export function AvatarUpload({ onChange, avatarUrl, error }: AvatarUploadProps) {
+  const [preview, setPreview] = useState<string | null>(avatarUrl || null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setPreview(avatarUrl || null)
+  }, [avatarUrl])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
