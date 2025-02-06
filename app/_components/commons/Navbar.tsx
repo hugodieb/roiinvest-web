@@ -9,7 +9,8 @@ import Link from 'next/link'
 import LinkButton from './LinkButton'
 import { Gem, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/app/store/auth'
-
+import Image from "next/image"
+import { useProfileStore } from '@/app/store/profileStore'
 
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
@@ -30,7 +31,14 @@ function classNames(...classes: string[]) {
 
 export default function Navbar() {
   const { logout, isAuthenticated } = useAuth();
-  const { user } = useAuthStore()
+  const { user } = useAuthStore();
+  const { profile } = useProfileStore();
+  const default_avatar = process.env.NEXT_PUBLIC_DEFAULT_AVATAR
+  const avatarUrl = typeof profile?.avatar === "string"
+    ?
+    (profile.avatar as string)
+    :
+    default_avatar
 
   const handleLogout = () => {
     logout()
@@ -104,11 +112,17 @@ export default function Navbar() {
                     focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      className="size-10 rounded-full"
+
+                    <Image
+                      src={avatarUrl}
+                      alt="Avatar"
+                      width={40}
+                      height={40}
+                      priority
+                      style={{ width: "auto", height: "auto" }}
+                      className="rounded-full object-cover"
                     />
+
                   </MenuButton>
                 </div>
                 <MenuItems

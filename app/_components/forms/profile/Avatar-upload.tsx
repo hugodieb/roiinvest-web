@@ -37,6 +37,7 @@ export function AvatarUpload({ onChange, avatarUrl, error }: AvatarUploadProps) 
           alt="Avatar"
           width={128}
           height={128}
+          priority
           className="rounded-full object-cover"
         />
       ) : (

@@ -13,8 +13,7 @@ import { useEffect } from "react"
 
 export default function ProfileForm() {
 
-  const { profile, isLoading } = useProfile()
-  const { updateAvatar, updateProfile } = useProfile()
+  const { updateAvatar, updateProfile, profile, isLoading } = useProfile()
 
   const {
     register,
@@ -59,11 +58,13 @@ export default function ProfileForm() {
     if (data.birth_date) formData.append("birth_date", data.birth_date);
     if (data.age) formData.append("age", data.age.toString());
     if (data.gender) formData.append("gender", data.gender);
-    if (data.avatar instanceof File) updateAvatar(data.avatar);
-
+    //if (data.avatar instanceof File) updateAvatar(data.avatar);
     updateProfile(formData);
   };
 
+  const changeAvatar = (file: File) => {
+    if (file instanceof File) updateAvatar(file);
+  }
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -83,6 +84,7 @@ export default function ProfileForm() {
             onChange={(file) => {
               if (file instanceof File) {
                 setValue("avatar", file);
+                changeAvatar(file)
               } else {
                 setValue("avatar", undefined);
               }

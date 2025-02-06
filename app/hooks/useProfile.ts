@@ -2,8 +2,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { api } from '@/app/lib/api'
 import { useProfileStore } from '@/app/store/profileStore'
 import { handleApiError } from '@/app/lib/errors'
-import { UserProfile } from '../types/profileTypes'
-import { useAuth } from './useAuth'
 import { useAuthStore } from '../store/auth'
 import toast from 'react-hot-toast'
 
@@ -27,6 +25,7 @@ export function useProfile() {
       return response.data;
     },
     onSuccess: (updatedData) => {
+      console.log("updatestore", updatedData)
       updateProfile(updatedData)
       toast.success(
         'Perfil atualizado com sucesso!'
@@ -39,9 +38,14 @@ export function useProfile() {
     mutationFn: async (file: File) => {
       const formData = new FormData()
       formData.append('avatar', file)
-      await api.post('/profile/update_avatar/', formData, {
+      const response = await api.post('/profile/update_avatar/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
+      return response.data
+    },
+    onSuccess: (updateData) => {
+      updateProfile(updateData)
+      toast.success('Avatar atualizado com sucesso!')
     },
     onError: handleApiError
   })
