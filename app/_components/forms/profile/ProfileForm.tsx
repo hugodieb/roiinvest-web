@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useProfile } from "@/app/hooks/useProfile"
 import { useEffect } from "react"
+import { formatCPF } from "@/app/utils/masks"
 
 export default function ProfileForm() {
 
@@ -26,6 +27,7 @@ export default function ProfileForm() {
     defaultValues: {
       first_name: "",
       last_name: "",
+      cpf: "",
       birth_date: "",
       age: undefined,
       gender: undefined,
@@ -37,6 +39,7 @@ export default function ProfileForm() {
     if (profile) {
       setValue("first_name", profile.first_name)
       setValue("last_name", profile.last_name)
+      setValue("cpf", profile.cpf)
       setValue("birth_date", profile.birth_date)
       setValue("age", profile.age)
       setValue("gender", profile.gender)
@@ -64,6 +67,10 @@ export default function ProfileForm() {
 
   const changeAvatar = (file: File) => {
     if (file instanceof File) updateAvatar(file);
+  }
+
+  const formattedValue = (value: string) => {
+    setValue("cpf", formatCPF(value))
   }
 
   return (
@@ -101,6 +108,15 @@ export default function ProfileForm() {
           <div>
             <Input {...register("last_name")} placeholder="Sobrenome" />
             {errors.last_name && <p className="text-red-500 text-sm mt-1">{errors.last_name.message}</p>}
+          </div>
+
+          <div>
+            <Input {...register("cpf")} placeholder="CPF"
+              onChange={(e) => {
+                formattedValue(e.target.value)
+              }}
+            />
+            {errors.cpf && <p className="text-red-500 text-sm mt-1">{errors.cpf.message}</p>}
           </div>
 
           <div>
