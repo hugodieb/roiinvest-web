@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useProfile } from "@/app/hooks/useProfile"
 import { useEffect } from "react"
-import { formatCPF } from "@/app/utils/masks"
+import { formatCPF, onlyNumbers } from "@/app/utils/masks"
 
 export default function ProfileForm() {
 
@@ -58,10 +58,12 @@ export default function ProfileForm() {
     formData.append("id", profile.id)
     formData.append("first_name", data.first_name);
     formData.append("last_name", data.last_name);
+    if (data.cpf) data.cpf = onlyNumbers(data.cpf)
+    formData.append("cpf", data.cpf);
     if (data.birth_date) formData.append("birth_date", data.birth_date);
     if (data.age) formData.append("age", data.age.toString());
     if (data.gender) formData.append("gender", data.gender);
-    //if (data.avatar instanceof File) updateAvatar(data.avatar);
+
     updateProfile(formData);
   };
 

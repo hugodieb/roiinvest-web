@@ -38,7 +38,7 @@ export function useProfile() {
     mutationFn: async (file: File) => {
       const formData = new FormData()
       formData.append('avatar', file)
-      const response = await api.post('/profile/update_avatar/', formData, {
+      const response = await api.patch('/profile/update_avatar/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       return response.data
